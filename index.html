@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotating Hedgehog</title>
+    <style>
+        body {
+            background-color:  #e3f9f5;
+            background-image: url(luvly.gif);
+            background-repeat: repeat;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color:  #f7e3f9;
+            border-color: black;
+            border-radius: 5px;
+            color: black;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .barn {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .chonker {
+            margin: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button id="add-hog">Add hedgehog</button>
+        <button id="remove-hog">Remove hedgehog</button>
+        <button id="bigger">Bigger</button>
+        <button id="smaller">Smaller</button>
+        <button id="faster">Faster</button>
+        <button id="slower">Slower</button>
+        <button id="reverse">Reverse</button>
+    </div>
+    <div class="barn">
+        <!-- Clones of .chonker will be added directly here -->
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const barn = document.querySelector(".barn");
+            const addButton = document.getElementById("add-hog");
+            const removeButton = document.getElementById("remove-hog");
+            const biggerButton = document.getElementById("bigger");
+            const smallerButton = document.getElementById("smaller");
+            const fasterButton = document.getElementById("faster");
+            const slowerButton = document.getElementById("slower");
+            const reverseButton = document.getElementById("reverse");
+
+            const maxhogs = 100;
+            let chonkerSize = 30; // Size in 'vw'
+            const maxSize = 100; // Max size in 'vw'
+            const minSize = 10; // Min size in 'vw'
+            let imageFileName = ''; // Placeholder for the image file name
+            let speed = 5; // Default speed
+            let direction = 'normal'; // Default direction
+
+            // Function to get the full image src based on the current file name
+            function getImageSrc() {
+                return `silly-little-hogs/${imageFileName}`;
+            }
+
+            // Function to update the imageFileName based on speed and direction
+            function updateImageFileName() {
+                // Placeholder logic - replace with actual file names
+                if (speed === 1 && direction === 'normal') {
+                    imageFileName = 'hedge5.gif';
+                } else if (speed === 1 && direction === 'reverse') {
+                    imageFileName = 'hog5.gif';
+                } else if (speed === 2 && direction === 'normal') {
+                    imageFileName = 'hedge10.gif';
+                } else if (speed === 2 && direction === 'reverse') {
+                    imageFileName = 'hog10.gif';
+                } else if (speed === 3 && direction === 'normal') {
+                    imageFileName = 'hedge25.gif';
+                } else if (speed === 3 && direction === 'reverse') {
+                    imageFileName = 'hog25.gif';
+                } else if (speed === 4 && direction === 'normal') {
+                    imageFileName = 'hedge50.gif';
+                } else if (speed === 4 && direction === 'reverse') {
+                    imageFileName = 'hog50.gif';
+                } else if (speed === 5 && direction === 'normal') {
+                    imageFileName = 'hedge100.gif';
+                } else if (speed === 5 && direction === 'reverse') {
+                    imageFileName = 'hog100.gif';
+                } else if (speed === 6 && direction === 'normal') {
+                    imageFileName = 'hedge150.gif';
+                } else if (speed === 6 && direction === 'reverse') {
+                    imageFileName = 'hog150.gif';
+                } else if (speed === 7 && direction === 'normal') {
+                    imageFileName = 'hedge200.gif';
+                } else if (speed === 7 && direction === 'reverse') {
+                    imageFileName = 'hog200.gif';
+                } else if (speed === 8 && direction === 'normal') {
+                    imageFileName = 'hedge300.gif';
+                } else if (speed === 8 && direction === 'reverse') {
+                    imageFileName = 'hog300.gif';
+                } else if (speed === 9 && direction === 'normal') {
+                    imageFileName = 'hedge600.gif';
+                } else if (speed === 9 && direction === 'reverse') {
+                    imageFileName = 'hog600.gif';
+                } else if (speed === 10 && direction === 'normal') {
+                    imageFileName = 'hedge1200.gif';
+                } else if (speed === 10 && direction === 'reverse') {
+                    imageFileName = 'hog1200.gif';
+                }
+            }
+
+            // Function to add a new chonker
+            function addChonker() {
+                if (barn.children.length < maxhogs) {
+                    const newChonker = document.createElement("div");
+                    newChonker.className = "chonker";
+                    newChonker.style.width = `${chonkerSize}vw`;
+                    newChonker.style.height = `${chonkerSize}vw`;
+                    newChonker.innerHTML = `<img class="la-vache" src="${getImageSrc()}" style="width:100%;height:100%;">`;
+                    barn.appendChild(newChonker);
+                }
+            }
+
+            // Function to adjust the size of all chonkers
+            function adjustChonkerSize(multiplier) {
+                const newSize = chonkerSize * multiplier;
+
+                // Ensure the new size stays within the bounds of minSize and maxSize
+                if (newSize <= maxSize && newSize >= minSize) {
+                    chonkerSize = newSize;
+                    const chonkers = document.querySelectorAll(".chonker");
+                    chonkers.forEach(chonker => {
+                        chonker.style.width = `${chonkerSize}vw`;
+                        chonker.style.height = `${chonkerSize}vw`;
+                    });
+                }
+            }
+
+            // Adjust speed with the "Faster" and "Slower" buttons
+            fasterButton.addEventListener("click", function() {
+                if (speed < 10) {
+                    speed++;
+                    updateImageFileName();
+                    refreshChonkers();
+                }
+            });
+
+            slowerButton.addEventListener("click", function() {
+                if (speed > 1) {
+                    speed--;
+                    updateImageFileName();
+                    refreshChonkers();
+                }
+            });
+
+            // Toggle direction with the "Reverse" button
+            reverseButton.addEventListener("click", function() {
+                direction = direction === 'normal' ? 'reverse' : 'normal';
+                updateImageFileName();
+                refreshChonkers();
+            });
+
+            // Function to refresh the image in all existing chonkers
+            function refreshChonkers() {
+                const chonkers = document.querySelectorAll(".chonker img.la-vache");
+                chonkers.forEach(img => {
+                    img.src = getImageSrc();
+                });
+            }
+
+            // Add a hog when the "Add hog" button is clicked
+            addButton.addEventListener("click", addChonker);
+
+            // Remove a hog when the "Remove hog" button is clicked
+            removeButton.addEventListener("click", function() {
+                if (barn.children.length > 0) {
+                    barn.removeChild(barn.lastChild);
+                }
+            });
+
+            // Make all chonkers bigger
+            biggerButton.addEventListener("click", function() {
+                adjustChonkerSize(1.1);
+            });
+
+            // Make all chonkers smaller
+            smallerButton.addEventListener("click", function() {
+                adjustChonkerSize(1 / 1.1);
+            });
+
+            // Add one chonker by default when the page loads
+            updateImageFileName();
+            addChonker();
+        });
+    </script>
+</body>
+</html>
